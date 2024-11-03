@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="countdown-app">
+        <h2>Countdown to Target Age</h2>
+        
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob">
+        
+        <label for="age">Target Age:</label>
+        <input type="number" id="age" min="1">
+     
+        <label for="format">Display Format:</label>
+        <select id="format">
+            <option value="days">Days</option>
+            <option value="hours">Hours</option>
+            <option value="minutes">Minutes</option>
+            <option value="seconds">Seconds</option>
+        </select>
+     
+        <button id="start-countdown">Start Countdown</button>
+     
+        <h1 id="time"></h1>
+     </div>
+     
+     <script>
+        let interval;
+     
+        document.getElementById("start-countdown").addEventListener("click", () => {
+            // Clear any previous countdown
+            clearInterval(interval);
+     
+            const dob = new Date(document.getElementById("dob").value);
+            const targetAge = parseInt(document.getElementById("age").value);
+            const format = document.getElementById("format").value;
+     
+            if (isNaN(dob) || isNaN(targetAge)) {
+                document.getElementById("time").innerText = "Please enter a valid date of birth and target age.";
+                return;
+            }
+     
+            // Calculate the target date by adding the target age to the DOB
+            const targetDate = new Date(dob);
+            targetDate.setFullYear(dob.getFullYear() + targetAge);
+     
+            // Start the countdown
+            interval = setInterval(() => {
+                const now = new Date();
+                let diff = targetDate - now;
+     
+                if (diff <= 0) {
+                    clearInterval(interval);
+                    document.getElementById("time").innerText = "Congratulations on reaching the target age!";
+                    return;
+                }
+     
+                // Calculate each unit of time
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+     
+                // Display based on selected format
+                let display;
+                if (format === "days") {
+                    display = `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
+                } else if (format === "hours") {
+                    const totalHours = Math.floor(diff / (1000 * 60 * 60));
+                    display = `${totalHours} hours, ${minutes} minutes, ${seconds} seconds`;
+                } else if (format === "minutes") {
+                    const totalMinutes = Math.floor(diff / (1000 * 60));
+                    display = `${totalMinutes} minutes, ${seconds} seconds`;
+                } else if (format === "seconds") {
+                    const totalSeconds = Math.floor(diff / 1000);
+                    display = `${totalSeconds} seconds`;
+                }
+     
+                document.getElementById("time").innerText = display;
+            }, 1000);
+        });
+     </script>
+     </body>
+</html>
