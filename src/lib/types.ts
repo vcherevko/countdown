@@ -25,3 +25,9 @@ export interface ValidationErrors {
   dob: string;
   targetAge: string;
 }
+
+export interface TimeUnit {
+  value: number;
+  label: string;
+  show: boolean;
+}

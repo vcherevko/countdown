@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { fade } from 'svelte/transition';
+
   export let isRunning = false;
   export let isPaused = false;
   export let onPause: () => void;
@@ -15,7 +17,7 @@
 </script>
 
 {#if isRunning}
-  <div class="button-group">
+  <div class="button-group" transition:fade={{ duration: 200 }}>
     <button class="btn-pause" on:click={handlePauseResume}>
       {isPaused ? 'Resume' : 'Pause'}
     </button>

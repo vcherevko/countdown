@@ -54,25 +54,35 @@ describe('formatTimeDisplay', () => {
 
   it('should format as days correctly', () => {
     const result = formatTimeDisplay(timeRemaining, 'days');
-    expect(result).toBe('10 days, 5 hours, 30 minutes, 45 seconds');
+    expect(result).toHaveLength(4);
+    expect(result[0]).toEqual({ value: 10, label: 'Days', show: true });
+    expect(result[1]).toEqual({ value: 5, label: 'Hours', show: true });
+    expect(result[2]).toEqual({ value: 30, label: 'Minutes', show: true });
+    expect(result[3]).toEqual({ value: 45, label: 'Seconds', show: true });
   });
 
   it('should format as hours correctly', () => {
     const result = formatTimeDisplay(timeRemaining, 'hours');
     const totalHours = 10 * 24 + 5;
-    expect(result).toBe(`${totalHours} hours, 30 minutes, 45 seconds`);
+    expect(result).toHaveLength(3);
+    expect(result[0]).toEqual({ value: totalHours, label: 'Hours', show: true });
+    expect(result[1]).toEqual({ value: 30, label: 'Minutes', show: true });
+    expect(result[2]).toEqual({ value: 45, label: 'Seconds', show: true });
   });
 
   it('should format as minutes correctly', () => {
     const result = formatTimeDisplay(timeRemaining, 'minutes');
     const totalMinutes = 10 * 24 * 60 + 5 * 60 + 30;
-    expect(result).toBe(`${totalMinutes} minutes, 45 seconds`);
+    expect(result).toHaveLength(2);
+    expect(result[0]).toEqual({ value: totalMinutes, label: 'Minutes', show: true });
+    expect(result[1]).toEqual({ value: 45, label: 'Seconds', show: true });
   });
 
   it('should format as seconds correctly', () => {
     const result = formatTimeDisplay(timeRemaining, 'seconds');
     const totalSeconds = 10 * 24 * 60 * 60 + 5 * 60 * 60 + 30 * 60 + 45;
-    expect(result).toBe(`${totalSeconds} seconds`);
+    expect(result).toHaveLength(1);
+    expect(result[0]).toEqual({ value: totalSeconds, label: 'Seconds', show: true });
   });
 });
 

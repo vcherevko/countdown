@@ -1,4 +1,4 @@
-import type { TimeRemaining, DisplayFormat } from './types';
+import type { TimeRemaining, DisplayFormat, TimeUnit } from './types';
 
 export function calculateTimeRemaining(targetDate: Date): TimeRemaining {
   const now = new Date();
@@ -19,22 +19,35 @@ export function calculateTimeRemaining(targetDate: Date): TimeRemaining {
 export function formatTimeDisplay(
   timeRemaining: TimeRemaining,
   format: DisplayFormat
-): string {
+): TimeUnit[] {
   const { days, hours, minutes, seconds } = timeRemaining;
 
   switch (format) {
     case 'days':
-      return `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
+      return [
+        { value: days, label: days === 1 ? 'Day' : 'Days', show: true },
+        { value: hours, label: hours === 1 ? 'Hour' : 'Hours', show: true },
+        { value: minutes, label: minutes === 1 ? 'Minute' : 'Minutes', show: true },
+        { value: seconds, label: seconds === 1 ? 'Second' : 'Seconds', show: true }
+      ].filter(unit => unit.show);
     case 'hours':
       const totalHours = days * 24 + hours;
-      return `${totalHours} hours, ${minutes} minutes, ${seconds} seconds`;
+      return [
+        { value: totalHours, label: totalHours === 1 ? 'Hour' : 'Hours', show: true },
+        { value: minutes, label: minutes === 1 ? 'Minute' : 'Minutes', show: true },
+        { value: seconds, label: seconds === 1 ? 'Second' : 'Seconds', show: true }
+      ];
     case 'minutes':
       const totalMinutes = days * 24 * 60 + hours * 60 + minutes;
-      return `${totalMinutes} minutes, ${seconds} seconds`;
+      return [
+        { value: totalMinutes, label: totalMinutes === 1 ? 'Minute' : 'Minutes', show: true },
+        { value: seconds, label: seconds === 1 ? 'Second' : 'Seconds', show: true }
+      ];
     case 'seconds':
-      const totalSeconds =
-        days * 24 * 60 * 60 + hours * 60 * 60 + minutes * 60 + seconds;
-      return `${totalSeconds} seconds`;
+      const totalSeconds = days * 24 * 60 * 60 + hours * 60 * 60 + minutes * 60 + seconds;
+      return [
+        { value: totalSeconds, label: totalSeconds === 1 ? 'Second' : 'Seconds', show: true }
+      ];
   }
 }
 

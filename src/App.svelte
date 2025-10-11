@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { fade } from 'svelte/transition';
   import CountdownForm from './components/CountdownForm.svelte';
   import CountdownDisplay from './components/CountdownDisplay.svelte';
   import ControlButtons from './components/ControlButtons.svelte';
@@ -6,10 +7,10 @@
   import { formatTimeDisplay } from './lib/utils';
   import type { DisplayFormat } from './lib/types';
 
-  $: displayText =
+  $: timeUnits =
     $countdownStore.timeRemaining && $countdownStore.format
       ? formatTimeDisplay($countdownStore.timeRemaining, $countdownStore.format)
-      : '';
+      : [];
 
   function handleStart(dob: string, targetAge: number, format: DisplayFormat) {
     countdownStore.start(dob, targetAge, format);
@@ -32,24 +33,34 @@
   <div class="countdown-app">
     <h2>Countdown to Target Age</h2>
 
-    <CountdownForm
-      onStart={handleStart}
-      disabled={$countdownStore.isRunning}
-    />
+{#key $countdownStore.isRunning}
+      {#if !$countdownStore.isRunning}
+        <div in:fade={{ duration: 250, delay: 150 }} out:fade={{ duration: 150 }}>
+          <CountdownForm
+            onStart={handleStart}
+            disabled={$countdownStore.isRunning}
+          />
+        </div>
+      {/if}
 
-    <ControlButtons
-      isRunning={$countdownStore.isRunning}
-      isPaused={$countdownStore.isPaused}
-      onPause={handlePause}
-      onResume={handleResume}
-      onReset={handleReset}
-    />
+      <ControlButtons
+        isRunning={$countdownStore.isRunning}
+        isPaused={$countdownStore.isPaused}
+        onPause={handlePause}
+        onResume={handleResume}
+        onReset={handleReset}
+      />
 
-    <CountdownDisplay
-      targetDateTimestamp={$countdownStore.targetDateTimestamp}
-      timeRemaining={$countdownStore.timeRemaining}
-      {displayText}
-    />
+      {#if $countdownStore.isRunning}
+        <div in:fade={{ duration: 250, delay: 150 }} out:fade={{ duration: 150 }}>
+          <CountdownDisplay
+            targetDateTimestamp={$countdownStore.targetDateTimestamp}
+            timeRemaining={$countdownStore.timeRemaining}
+            {timeUnits}
+          />
+        </div>
+      {/if}
+    {/key}
   </div>
 </main>
 
