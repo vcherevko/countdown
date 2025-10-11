@@ -1,9 +1,7 @@
-version: '3.8'
-
 services:
   countdown-app:
     build: .
-    container_name: countdown-app
+    container_name: countdown-svelte-app
     ports:
-      - "3000:80"
+      - "3001:80"
     restart: unless-stopped
