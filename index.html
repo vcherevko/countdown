@@ -3,85 +3,403 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Countdown to Target Age</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        #countdown-app {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h2 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="date"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input[type="date"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .error {
+            border-color: #e74c3c !important;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #start-countdown {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        #start-countdown:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        #pause-countdown {
+            background: #f39c12;
+            color: white;
+            display: none;
+        }
+
+        #pause-countdown:hover {
+            background: #e67e22;
+        }
+
+        #reset-countdown {
+            background: #95a5a6;
+            color: white;
+            display: none;
+        }
+
+        #reset-countdown:hover {
+            background: #7f8c8d;
+        }
+
+        .countdown-section {
+            margin-top: 40px;
+            display: none;
+        }
+
+        .countdown-section.show {
+            display: block;
+        }
+
+        .target-date {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .target-date-label {
+            font-size: 12px;
+            color: #777;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .target-date-value {
+            font-size: 18px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        #time {
+            font-size: 48px;
+            color: #667eea;
+            text-align: center;
+            font-weight: 700;
+            line-height: 1.2;
+            animation: fadeIn 0.5s ease;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-radius: 12px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .time-update {
+            animation: pulse 0.3s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.02);
+            }
+        }
+
+        @media (max-width: 600px) {
+            #countdown-app {
+                padding: 30px 20px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            #time {
+                font-size: 32px;
+                padding: 15px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
     <div id="countdown-app">
         <h2>Countdown to Target Age</h2>
-        
-        <label for="dob">Date of Birth:</label>
-        <input type="date" id="dob">
-        
-        <label for="age">Target Age:</label>
-        <input type="number" id="age" min="1">
-     
-        <label for="format">Display Format:</label>
-        <select id="format">
-            <option value="days">Days</option>
-            <option value="hours">Hours</option>
-            <option value="minutes">Minutes</option>
-            <option value="seconds">Seconds</option>
-        </select>
-     
-        <button id="start-countdown">Start Countdown</button>
-     
-        <h1 id="time"></h1>
+
+        <div class="input-group">
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob">
+            <div class="error-message" id="dob-error">Please enter a valid date of birth</div>
+        </div>
+
+        <div class="input-group">
+            <label for="age">Target Age:</label>
+            <input type="number" id="age" min="1" placeholder="e.g., 30">
+            <div class="error-message" id="age-error">Please enter a valid target age</div>
+        </div>
+
+        <div class="input-group">
+            <label for="format">Display Format:</label>
+            <select id="format">
+                <option value="days">Days</option>
+                <option value="hours">Hours</option>
+                <option value="minutes">Minutes</option>
+                <option value="seconds">Seconds</option>
+            </select>
+        </div>
+
+        <div class="button-group">
+            <button id="start-countdown">Start Countdown</button>
+            <button id="pause-countdown">Pause</button>
+            <button id="reset-countdown">Reset</button>
+        </div>
+
+        <div class="countdown-section" id="countdown-section">
+            <div class="target-date">
+                <div class="target-date-label">Target Date</div>
+                <div class="target-date-value" id="target-date-display"></div>
+            </div>
+            <h1 id="time"></h1>
+        </div>
      </div>
      
      <script>
         let interval;
-     
-        document.getElementById("start-countdown").addEventListener("click", () => {
-            // Clear any previous countdown
-            clearInterval(interval);
-     
-            const dob = new Date(document.getElementById("dob").value);
-            const targetAge = parseInt(document.getElementById("age").value);
-            const format = document.getElementById("format").value;
-     
-            if (isNaN(dob) || isNaN(targetAge)) {
-                document.getElementById("time").innerText = "Please enter a valid date of birth and target age.";
+        let isPaused = false;
+        let targetDate = null;
+
+        const dobInput = document.getElementById("dob");
+        const ageInput = document.getElementById("age");
+        const formatSelect = document.getElementById("format");
+        const startBtn = document.getElementById("start-countdown");
+        const pauseBtn = document.getElementById("pause-countdown");
+        const resetBtn = document.getElementById("reset-countdown");
+        const timeDisplay = document.getElementById("time");
+        const countdownSection = document.getElementById("countdown-section");
+        const targetDateDisplay = document.getElementById("target-date-display");
+        const dobError = document.getElementById("dob-error");
+        const ageError = document.getElementById("age-error");
+
+        function clearErrors() {
+            dobInput.classList.remove("error");
+            ageInput.classList.remove("error");
+            dobError.classList.remove("show");
+            ageError.classList.remove("show");
+        }
+
+        function validateInputs() {
+            clearErrors();
+            let isValid = true;
+
+            const dob = new Date(dobInput.value);
+            const age = parseInt(ageInput.value);
+
+            if (!dobInput.value || isNaN(dob.getTime())) {
+                dobInput.classList.add("error");
+                dobError.classList.add("show");
+                isValid = false;
+            }
+
+            if (!ageInput.value || isNaN(age) || age < 1) {
+                ageInput.classList.add("error");
+                ageError.classList.add("show");
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        function updateCountdown() {
+            const now = new Date();
+            let diff = targetDate - now;
+            const format = formatSelect.value;
+
+            if (diff <= 0) {
+                clearInterval(interval);
+                timeDisplay.innerText = "🎉 Congratulations on reaching the target age!";
+                pauseBtn.style.display = "none";
                 return;
             }
-     
-            // Calculate the target date by adding the target age to the DOB
-            const targetDate = new Date(dob);
-            targetDate.setFullYear(dob.getFullYear() + targetAge);
-     
-            // Start the countdown
-            interval = setInterval(() => {
-                const now = new Date();
-                let diff = targetDate - now;
-     
-                if (diff <= 0) {
-                    clearInterval(interval);
-                    document.getElementById("time").innerText = "Congratulations on reaching the target age!";
-                    return;
-                }
-     
-                // Calculate each unit of time
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-     
-                // Display based on selected format
-                let display;
-                if (format === "days") {
-                    display = `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
-                } else if (format === "hours") {
-                    const totalHours = Math.floor(diff / (1000 * 60 * 60));
-                    display = `${totalHours} hours, ${minutes} minutes, ${seconds} seconds`;
-                } else if (format === "minutes") {
-                    const totalMinutes = Math.floor(diff / (1000 * 60));
-                    display = `${totalMinutes} minutes, ${seconds} seconds`;
-                } else if (format === "seconds") {
-                    const totalSeconds = Math.floor(diff / 1000);
-                    display = `${totalSeconds} seconds`;
-                }
-     
-                document.getElementById("time").innerText = display;
-            }, 1000);
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            let display;
+            if (format === "days") {
+                display = `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
+            } else if (format === "hours") {
+                const totalHours = Math.floor(diff / (1000 * 60 * 60));
+                display = `${totalHours} hours, ${minutes} minutes, ${seconds} seconds`;
+            } else if (format === "minutes") {
+                const totalMinutes = Math.floor(diff / (1000 * 60));
+                display = `${totalMinutes} minutes, ${seconds} seconds`;
+            } else if (format === "seconds") {
+                const totalSeconds = Math.floor(diff / 1000);
+                display = `${totalSeconds} seconds`;
+            }
+
+            timeDisplay.innerText = display;
+            timeDisplay.classList.add("time-update");
+            setTimeout(() => timeDisplay.classList.remove("time-update"), 300);
+        }
+
+        formatSelect.addEventListener("change", () => {
+            if (interval && !isPaused) {
+                updateCountdown();
+            }
+        });
+
+        startBtn.addEventListener("click", () => {
+            if (!validateInputs()) {
+                return;
+            }
+
+            clearInterval(interval);
+            isPaused = false;
+
+            const dob = new Date(dobInput.value);
+            const age = parseInt(ageInput.value);
+
+            targetDate = new Date(dob);
+            targetDate.setFullYear(dob.getFullYear() + age);
+
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            targetDateDisplay.innerText = targetDate.toLocaleDateString('en-US', options);
+
+            countdownSection.classList.add("show");
+            pauseBtn.style.display = "block";
+            resetBtn.style.display = "block";
+            pauseBtn.innerText = "Pause";
+
+            updateCountdown();
+            interval = setInterval(updateCountdown, 1000);
+        });
+
+        pauseBtn.addEventListener("click", () => {
+            if (isPaused) {
+                interval = setInterval(updateCountdown, 1000);
+                pauseBtn.innerText = "Pause";
+                isPaused = false;
+            } else {
+                clearInterval(interval);
+                pauseBtn.innerText = "Resume";
+                isPaused = true;
+            }
+        });
+
+        resetBtn.addEventListener("click", () => {
+            clearInterval(interval);
+            isPaused = false;
+            targetDate = null;
+            timeDisplay.innerText = "";
+            countdownSection.classList.remove("show");
+            pauseBtn.style.display = "none";
+            resetBtn.style.display = "none";
+            dobInput.value = "";
+            ageInput.value = "";
+            clearErrors();
         });
      </script>
      </body>
