@@ -6,10 +6,10 @@
   import { formatTimeDisplay } from './lib/utils';
   import type { DisplayFormat } from './lib/types';
 
-  $: displayText =
+  $: timeUnits =
     $countdownStore.timeRemaining && $countdownStore.format
       ? formatTimeDisplay($countdownStore.timeRemaining, $countdownStore.format)
-      : '';
+      : [];
 
   function handleStart(dob: string, targetAge: number, format: DisplayFormat) {
     countdownStore.start(dob, targetAge, format);
@@ -48,7 +48,7 @@
     <CountdownDisplay
       targetDateTimestamp={$countdownStore.targetDateTimestamp}
       timeRemaining={$countdownStore.timeRemaining}
-      {displayText}
+      {timeUnits}
     />
   </div>
 </main>

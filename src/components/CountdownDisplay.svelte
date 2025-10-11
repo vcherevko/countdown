@@ -1,11 +1,11 @@
 <script lang="ts">
   import { fade, scale } from 'svelte/transition';
-  import type { TimeRemaining } from '../lib/types';
+  import type { TimeRemaining, TimeUnit } from '../lib/types';
   import { formatTargetDate } from '../lib/utils';
 
   export let targetDateTimestamp: number | null;
   export let timeRemaining: TimeRemaining | null;
-  export let displayText: string;
+  export let timeUnits: TimeUnit[];
 
   $: targetDate = targetDateTimestamp ? new Date(targetDateTimestamp) : null;
 </script>
@@ -17,7 +17,14 @@
       <div class="target-date-value">{formatTargetDate(targetDate)}</div>
     </div>
 
-    <h1 class="time" transition:scale>{displayText}</h1>
+    <div class="time-grid">
+      {#each timeUnits as unit, index (index)}
+        <div class="time-card">
+          <div class="time-value">{unit.value}</div>
+          <div class="time-label">{unit.label}</div>
+        </div>
+      {/each}
+    </div>
   </div>
 {/if}
 
@@ -31,7 +38,7 @@
     padding: 15px;
     border-radius: 8px;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
   }
 
   .target-date-label {
@@ -48,26 +55,60 @@
     font-weight: 600;
   }
 
-  .time {
-    font-size: 48px;
-    color: #667eea;
-    text-align: center;
-    font-weight: 700;
-    line-height: 1.2;
-    padding: 20px;
+  .time-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 15px;
+    margin-top: 10px;
+  }
+
+  .time-card {
     background: linear-gradient(
       135deg,
       rgba(102, 126, 234, 0.1) 0%,
       rgba(118, 75, 162, 0.1) 100%
     );
     border-radius: 12px;
-    margin: 0;
+    padding: 20px 10px;
+    text-align: center;
+    transition: transform 0.2s ease;
+  }
+
+  .time-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .time-value {
+    font-size: 36px;
+    font-weight: 700;
+    color: #667eea;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .time-label {
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
   }
 
   @media (max-width: 600px) {
-    .time {
-      font-size: 32px;
-      padding: 15px;
+    .time-grid {
+      gap: 10px;
+    }
+
+    .time-card {
+      padding: 15px 8px;
+    }
+
+    .time-value {
+      font-size: 28px;
+    }
+
+    .time-label {
+      font-size: 10px;
     }
   }
 </style>
