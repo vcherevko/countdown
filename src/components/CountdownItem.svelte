@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { CountdownItem, TimeRemaining } from '../lib/types';
   import { formatTimeDisplay } from '../lib/utils';
+  import FlipCounter from './FlipCounter.svelte';
 
   export let countdown: CountdownItem;
   export let timeRemaining: TimeRemaining | undefined;
@@ -44,10 +45,7 @@
       <div class="time-display">
         {#each timeUnits as unit}
           {#if unit.show}
-            <div class="time-unit">
-              <span class="time-value">{unit.value}</span>
-              <span class="time-label">{unit.label}</span>
-            </div>
+            <FlipCounter value={unit.value} label={unit.label} />
           {/if}
         {/each}
       </div>
@@ -122,32 +120,18 @@
 
   .time-display {
     display: flex;
-    gap: 12px;
+    gap: 16px;
     flex-wrap: wrap;
+    justify-content: center;
+    padding: 16px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border-radius: 12px;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
   }
 
   .time-display.loading {
     color: #999;
     font-style: italic;
-  }
-
-  .time-unit {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 60px;
-  }
-
-  .time-value {
-    font-size: 24px;
-    font-weight: 700;
-    color: #667eea;
-  }
-
-  .time-label {
-    font-size: 12px;
-    color: #999;
-    text-transform: uppercase;
   }
 
   @media (max-width: 600px) {
@@ -159,8 +143,9 @@
       font-size: 18px;
     }
 
-    .time-value {
-      font-size: 20px;
+    .time-display {
+      gap: 12px;
+      padding: 12px;
     }
   }
 </style>
