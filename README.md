@@ -43,6 +43,38 @@ npm run dev
 
 3. Open [http://localhost:5173](http://localhost:5173) in your browser
 
+### Development with ngrok (for Telegram Mini Apps)
+
+To test the app as a Telegram Mini App, you need to expose your local dev server with HTTPS:
+
+1. Install ngrok from [https://ngrok.com/download](https://ngrok.com/download)
+
+2. Sign up at [https://dashboard.ngrok.com/signup](https://dashboard.ngrok.com/signup)
+
+3. Authenticate ngrok with your token:
+```bash
+ngrok config add-authtoken YOUR_TOKEN_HERE
+```
+
+4. Start the dev server:
+```bash
+npm run dev
+```
+
+5. In a separate terminal, start ngrok tunnel:
+```bash
+ngrok http 5173
+```
+
+6. Get your public HTTPS URL from ngrok:
+```bash
+curl -s http://localhost:4040/api/tunnels | grep -o '"public_url":"[^"]*"' | grep https
+```
+
+7. Use the HTTPS URL in your Telegram bot settings
+
+Note: The vite.config.ts is already configured to allow ngrok domains (`.ngrok-free.dev`).
+
 ### Build for Production
 
 ```bash
