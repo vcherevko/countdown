@@ -1,6 +1,6 @@
 # Countdown to Target Age
 
-A modern web application that calculates and displays a real-time countdown to a specific age based on your date of birth.
+A modern web application for creating and managing multiple countdown timers to track important dates and milestones.
 
 ## Tech Stack
 
@@ -12,14 +12,18 @@ A modern web application that calculates and displays a real-time countdown to a
 
 ## Features
 
-- Calculate countdown to any target age
-- Real-time countdown timer with millisecond precision
-- Multiple display formats (days, hours, minutes, seconds)
-- Pause/Resume functionality
-- Reset countdown
-- Input validation
-- Responsive design
-- Beautiful gradient UI
+- **Multiple Countdowns** - Create and manage multiple countdown timers
+- **Persistent Storage** - All countdowns are saved in localStorage
+- **Real-time Updates** - Live countdown with second-level precision
+- **Custom Titles** - Give each countdown a meaningful name (up to 50 characters)
+- **Display Formats** - Choose between full format, days-only, or hours-only display
+- **Edit & Delete** - Modify or remove countdowns anytime
+- **Delete Confirmation** - Custom modal to prevent accidental deletions
+- **Empty State** - Beautiful empty state with icon and call-to-action
+- **Sorting** - Automatically sorted by time remaining (closest deadline first)
+- **Input Validation** - Smart form validation with helpful error messages
+- **Responsive Design** - Mobile-first design that works on all screen sizes
+- **Telegram Mini App** - Fully integrated with Telegram Web App API
 
 ## Getting Started
 
@@ -117,39 +121,59 @@ docker-compose down
 ```
 countdown-svelte/
 ├── src/
-│   ├── components/          # Svelte components
-│   │   ├── CountdownForm.svelte
-│   │   ├── CountdownDisplay.svelte
-│   │   └── ControlButtons.svelte
+│   ├── components/              # Svelte components
+│   │   ├── ConfirmDialog.svelte    # Reusable confirmation modal
+│   │   ├── CountdownEditPage.svelte # Add/edit countdown form
+│   │   ├── CountdownItem.svelte     # Individual countdown card
+│   │   └── CountdownList.svelte     # Main list view with empty state
 │   ├── lib/
-│   │   ├── types.ts        # TypeScript interfaces
-│   │   └── utils.ts        # Utility functions
+│   │   ├── storage/            # Storage abstraction layer
+│   │   │   ├── ICountdownStorage.ts      # Storage interface
+│   │   │   ├── LocalCountdownStorage.ts  # localStorage implementation
+│   │   │   └── index.ts                  # Storage factory
+│   │   ├── types.ts           # TypeScript interfaces
+│   │   └── utils.ts           # Utility functions
 │   ├── stores/
-│   │   └── countdown.ts    # Svelte store for state management
-│   ├── App.svelte          # Root component
-│   └── main.ts             # Application entry point
-├── Dockerfile              # Multi-stage Docker build
-├── docker-compose.yml      # Docker Compose configuration
+│   │   └── countdown.ts       # Svelte store for state management
+│   ├── App.svelte             # Root component with routing
+│   └── main.ts                # Application entry point
+├── Dockerfile                 # Multi-stage Docker build
+├── docker-compose.yml         # Docker Compose configuration
 └── package.json
 ```
 
 ## How It Works
 
-1. Enter your date of birth
-2. Enter your target age
-3. Select display format (days, hours, minutes, or seconds)
-4. Click "Start Countdown"
-5. Watch the real-time countdown to your target age
-6. Use Pause/Resume to control the countdown
-7. Click Reset to start over
+1. **List View** - See all your countdowns at a glance, sorted by urgency
+2. **Add Countdown** - Click "+ Add New" or "Create Countdown" button
+3. **Fill Form** - Enter a title, date of birth, target age, and display format
+4. **Live Updates** - Watch all countdowns update in real-time every second
+5. **Edit** - Click the edit icon (✏️) to modify any countdown
+6. **Delete** - Click the delete icon (🗑️) and confirm to remove a countdown
+7. **Persistence** - All data is automatically saved to localStorage
 
 ## Technical Details
 
-- **State Management**: Uses Svelte writable stores for reactive state
+### Architecture
+- **Storage Abstraction**: Interface-based storage layer for easy replacement (localStorage → API/DB)
+- **State Management**: Centralized Svelte stores with derived stores for sorting
+- **Component-based**: Modular component architecture with clear separation of concerns
 - **Type Safety**: Full TypeScript support with strict type checking
-- **Timestamp-based**: Stores dates as timestamps for reliable serialization
-- **Reactive Updates**: 1-second interval updates using setInterval
-- **Scoped Styles**: Component-scoped CSS with Svelte
+
+### Key Features
+- **Reactive Updates**: All countdowns update simultaneously every second using setInterval
+- **Timestamp-based**: Dates stored as millisecond timestamps for reliability
+- **UUID Generation**: Unique IDs using timestamp + random string
+- **Derived Stores**: Automatic sorting by time remaining (closest deadline first)
+- **Form Validation**: Real-time validation with user-friendly error messages
+- **Scoped Styles**: Component-scoped CSS prevents style conflicts
+
+### Data Flow
+1. User actions trigger store methods (add/update/delete)
+2. Store updates both in-memory state and localStorage
+3. Reactive subscriptions automatically update UI
+4. Interval timer updates time remaining for all countdowns
+5. Derived store recomputes sorted list on every change
 
 ## License
 

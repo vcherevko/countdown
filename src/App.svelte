@@ -1,67 +1,85 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
-  import CountdownForm from './components/CountdownForm.svelte';
-  import CountdownDisplay from './components/CountdownDisplay.svelte';
-  import ControlButtons from './components/ControlButtons.svelte';
-  import { countdownStore } from './stores/countdown';
-  import { formatTimeDisplay } from './lib/utils';
-  import type { DisplayFormat } from './lib/types';
+  import CountdownList from './components/CountdownList.svelte';
+  import CountdownEditPage from './components/CountdownEditPage.svelte';
+  import ConfirmDialog from './components/ConfirmDialog.svelte';
+  import { countdownsStore, sortedCountdowns } from './stores/countdown';
+  import type { ConfirmDialogConfig, DisplayFormat } from './lib/types';
 
-  $: timeUnits =
-    $countdownStore.timeRemaining && $countdownStore.format
-      ? formatTimeDisplay($countdownStore.timeRemaining, $countdownStore.format)
-      : [];
+  let confirmDialogConfig: ConfirmDialogConfig | null = null;
 
-  function handleStart(dob: string, targetAge: number, format: DisplayFormat) {
-    countdownStore.start(dob, targetAge, format);
+  function showConfirmDialog(config: ConfirmDialogConfig) {
+    confirmDialogConfig = config;
   }
 
-  function handlePause() {
-    countdownStore.pause();
+  function handleAdd() {
+    countdownsStore.navigateTo('add', null);
   }
 
-  function handleResume() {
-    countdownStore.resume();
+  function handleEdit(id: string) {
+    countdownsStore.navigateTo('edit', id);
   }
 
-  function handleReset() {
-    countdownStore.reset();
+  function handleDelete(id: string) {
+    countdownsStore.deleteCountdown(id);
   }
+
+  function handleSave(title: string, dob: string, targetAge: number, format: DisplayFormat) {
+    if ($countdownsStore.currentPage === 'add') {
+      countdownsStore.addCountdown(title, dob, targetAge, format);
+    } else if ($countdownsStore.currentPage === 'edit' && $countdownsStore.activeId) {
+      countdownsStore.updateCountdown($countdownsStore.activeId, {
+        title,
+        dob,
+        targetAge,
+        format,
+      });
+    }
+    countdownsStore.navigateTo('list', null);
+  }
+
+  function handleCancel() {
+    countdownsStore.navigateTo('list', null);
+  }
+
+  $: activeCountdown = $countdownsStore.activeId
+    ? $countdownsStore.items.find((item) => item.id === $countdownsStore.activeId) || null
+    : null;
 </script>
 
 <main>
   <div class="countdown-app">
-    <h2>Countdown to Target Age</h2>
-
-{#key $countdownStore.isRunning}
-      {#if !$countdownStore.isRunning}
-        <div in:fade={{ duration: 250, delay: 150 }} out:fade={{ duration: 150 }}>
-          <CountdownForm
-            onStart={handleStart}
-            disabled={$countdownStore.isRunning}
-          />
-        </div>
-      {/if}
-
-      <ControlButtons
-        isRunning={$countdownStore.isRunning}
-        isPaused={$countdownStore.isPaused}
-        onPause={handlePause}
-        onResume={handleResume}
-        onReset={handleReset}
-      />
-
-      {#if $countdownStore.isRunning}
-        <div in:fade={{ duration: 250, delay: 150 }} out:fade={{ duration: 150 }}>
-          <CountdownDisplay
-            targetDateTimestamp={$countdownStore.targetDateTimestamp}
-            timeRemaining={$countdownStore.timeRemaining}
-            {timeUnits}
-          />
-        </div>
-      {/if}
-    {/key}
+    {#if $countdownsStore.currentPage === 'list'}
+      <div in:fade={{ duration: 200 }}>
+        <CountdownList
+          countdowns={$sortedCountdowns}
+          timeRemainingMap={$countdownsStore.timeRemainingMap}
+          onAdd={handleAdd}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          {showConfirmDialog}
+        />
+      </div>
+    {:else if $countdownsStore.currentPage === 'add'}
+      <div in:fade={{ duration: 200 }}>
+        <CountdownEditPage
+          countdown={null}
+          onSave={handleSave}
+          onCancel={handleCancel}
+        />
+      </div>
+    {:else if $countdownsStore.currentPage === 'edit'}
+      <div in:fade={{ duration: 200 }}>
+        <CountdownEditPage
+          countdown={activeCountdown}
+          onSave={handleSave}
+          onCancel={handleCancel}
+        />
+      </div>
+    {/if}
   </div>
+
+  <ConfirmDialog bind:config={confirmDialogConfig} />
 </main>
 
 <style>
@@ -89,28 +107,13 @@
   }
 
   .countdown-app {
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    padding: 40px;
-    max-width: 500px;
     width: 100%;
-  }
-
-  h2 {
-    color: #333;
-    font-size: 28px;
-    margin-bottom: 30px;
-    text-align: center;
+    max-width: 100%;
   }
 
   @media (max-width: 600px) {
-    .countdown-app {
-      padding: 30px 20px;
-    }
-
-    h2 {
-      font-size: 24px;
+    main {
+      padding: 10px;
     }
   }
 </style>
