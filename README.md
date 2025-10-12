@@ -15,8 +15,9 @@ A modern web application for creating and managing multiple countdown timers to 
 - **Multiple Countdowns** - Create and manage multiple countdown timers
 - **Persistent Storage** - All countdowns are saved in localStorage
 - **Real-time Updates** - Live countdown with second-level precision
+- **Digital Flip Counter** - Modern flip-style animated digits with smooth transitions
 - **Custom Titles** - Give each countdown a meaningful name (up to 50 characters)
-- **Display Formats** - Choose between full format, days-only, or hours-only display
+- **Display Formats** - Choose between Days, Hours, Minutes, or Seconds display
 - **Edit & Delete** - Modify or remove countdowns anytime
 - **Delete Confirmation** - Custom modal to prevent accidental deletions
 - **Empty State** - Beautiful empty state with icon and call-to-action
@@ -122,18 +123,25 @@ docker-compose down
 countdown-svelte/
 ├── src/
 │   ├── components/              # Svelte components
+│   │   ├── __tests__/               # Component tests
+│   │   │   └── FlipCounter.test.ts      # FlipCounter component tests
 │   │   ├── ConfirmDialog.svelte    # Reusable confirmation modal
 │   │   ├── CountdownEditPage.svelte # Add/edit countdown form
 │   │   ├── CountdownItem.svelte     # Individual countdown card
-│   │   └── CountdownList.svelte     # Main list view with empty state
+│   │   ├── CountdownList.svelte     # Main list view with empty state
+│   │   └── FlipCounter.svelte       # Animated flip counter display
 │   ├── lib/
 │   │   ├── storage/            # Storage abstraction layer
 │   │   │   ├── ICountdownStorage.ts      # Storage interface
 │   │   │   ├── LocalCountdownStorage.ts  # localStorage implementation
 │   │   │   └── index.ts                  # Storage factory
+│   │   ├── __tests__/               # Unit tests
+│   │   │   └── utils.test.ts            # Utility function tests
 │   │   ├── types.ts           # TypeScript interfaces
 │   │   └── utils.ts           # Utility functions
 │   ├── stores/
+│   │   ├── __tests__/               # Store tests
+│   │   │   └── countdown.test.ts        # Countdown store tests
 │   │   └── countdown.ts       # Svelte store for state management
 │   ├── App.svelte             # Root component with routing
 │   └── main.ts                # Application entry point
@@ -162,11 +170,13 @@ countdown-svelte/
 
 ### Key Features
 - **Reactive Updates**: All countdowns update simultaneously every second using setInterval
+- **Flip Animation**: CSS 3D transforms with animationend event synchronization for smooth transitions
 - **Timestamp-based**: Dates stored as millisecond timestamps for reliability
 - **UUID Generation**: Unique IDs using timestamp + random string
 - **Derived Stores**: Automatic sorting by time remaining (closest deadline first)
 - **Form Validation**: Real-time validation with user-friendly error messages
 - **Scoped Styles**: Component-scoped CSS prevents style conflicts
+- **Component Testing**: Comprehensive test coverage with Vitest
 
 ### Data Flow
 1. User actions trigger store methods (add/update/delete)
