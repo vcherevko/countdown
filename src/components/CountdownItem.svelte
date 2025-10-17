@@ -2,6 +2,7 @@
   import type { CountdownItem, TimeRemaining } from '../lib/types';
   import { formatTimeDisplay } from '../lib/utils';
   import FlipCounter from './FlipCounter.svelte';
+  import { Pencil, Trash2 } from 'lucide-svelte';
 
   export let countdown: CountdownItem;
   export let timeRemaining: TimeRemaining | undefined;
@@ -28,10 +29,10 @@
     <h3>{countdown.title}</h3>
     <div class="card-actions">
       <button class="btn-icon btn-edit" on:click={onEdit} aria-label="Edit countdown">
-        ✏️
+        <Pencil size={18} />
       </button>
       <button class="btn-icon btn-delete" on:click={onDelete} aria-label="Delete countdown">
-        🗑️
+        <Trash2 size={18} />
       </button>
     </div>
   </div>
@@ -92,19 +93,27 @@
   .btn-icon {
     background: none;
     border: none;
-    font-size: 18px;
     cursor: pointer;
-    padding: 4px 8px;
+    padding: 6px;
     border-radius: 4px;
     transition: background 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
   }
 
   .btn-icon:hover {
     background: #f0f0f0;
   }
 
+  .btn-edit:hover {
+    color: #667eea;
+  }
+
   .btn-delete:hover {
     background: #fee;
+    color: #e74c3c;
   }
 
   .card-body {

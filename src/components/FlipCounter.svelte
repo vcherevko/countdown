@@ -72,26 +72,27 @@
   <div class="flip-digits">
     {#each digits as digitData, i (i)}
       <div class="flip-digit">
+        <!-- Static top half (new number) -->
+        <div class="digit-half digit-top-static">
+          <span>{digitData.current}</span>
+        </div>
+
+        <!-- Static bottom half (shows prev during flip, current after) -->
+        <div class="digit-half digit-bottom-static">
+          <span>{digitData.isFlipping ? digitData.prev : digitData.current}</span>
+        </div>
+
+        <!-- Animated flipping top half -->
         <div
-          class="flip-card"
+          class="digit-top-flip"
           class:flipping={digitData.isFlipping}
           on:animationend={() => handleAnimationEnd(i)}
         >
-          <div class="flip-card-face flip-card-front">
-            <div class="flip-card-half flip-card-top">
-              <span>{digitData.prev}</span>
-            </div>
-            <div class="flip-card-half flip-card-bottom">
-              <span>{digitData.prev}</span>
-            </div>
+          <div class="flip-half flip-front">
+            <span class="top-half">{digitData.prev}</span>
           </div>
-          <div class="flip-card-face flip-card-back">
-            <div class="flip-card-half flip-card-top">
-              <span>{digitData.current}</span>
-            </div>
-            <div class="flip-card-half flip-card-bottom">
-              <span>{digitData.current}</span>
-            </div>
+          <div class="flip-half flip-back">
+            <span class="bottom-half">{digitData.current}</span>
           </div>
         </div>
       </div>
@@ -118,21 +119,64 @@
     position: relative;
     width: 48px;
     height: 64px;
+    backface-visibility: hidden;
+    transform: translateZ(0);
   }
 
-  .flip-card {
-    position: relative;
+  /* Shared styles for all halves */
+  .digit-half,
+  .flip-half {
+    position: absolute;
     width: 100%;
-    height: 100%;
+    height: 50%;
+    overflow: hidden;
+    background: linear-gradient(180deg, #0f3460 0%, #1a4d7a 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-sizing: border-box;
+  }
+
+  /* Static top half - shows new number after flip */
+  .digit-top-static {
+    top: 0;
+    left: 0;
+    border-radius: 8px 8px 0 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    z-index: 1;
+  }
+
+  /* Static bottom half - always shows current number */
+  .digit-bottom-static {
+    bottom: 0;
+    left: 0;
+    border-radius: 0 0 8px 8px;
+    background: linear-gradient(180deg, #0a2540 0%, #0f3460 100%);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+  }
+
+  /* Animated flipping top half container */
+  .digit-top-flip {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
     transform-style: preserve-3d;
-    transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transform-origin: bottom center;
+    z-index: 2;
+    transform: rotateX(0deg);
   }
 
-  .flip-card.flipping {
-    animation: flip 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+  .digit-top-flip.flipping {
+    animation: flipDown 0.6s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
+    will-change: transform;
   }
 
-  @keyframes flip {
+  .digit-top-flip:not(.flipping) {
+    will-change: auto;
+  }
+
+  @keyframes flipDown {
     0% {
       transform: rotateX(0deg);
     }
@@ -141,45 +185,37 @@
     }
   }
 
-  .flip-card-face {
+  /* Front face of flipping element (old number) */
+  .flip-front {
     position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
-  }
-
-  .flip-card-front {
-    transform: rotateX(0deg);
-  }
-
-  .flip-card-back {
-    transform: rotateX(180deg);
-  }
-
-  .flip-card-half {
-    position: absolute;
-    width: 100%;
-    height: 50%;
-    overflow: hidden;
-    background: linear-gradient(180deg, #0f3460 0%, #1a4d7a 100%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .flip-card-top {
-    top: 0;
     border-radius: 8px 8px 0 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.3);
   }
 
-  .flip-card-bottom {
-    bottom: 0;
+  /* Back face of flipping element (new number) */
+  .flip-back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform: rotateX(180deg);
     border-radius: 0 0 8px 8px;
     background: linear-gradient(180deg, #0a2540 0%, #0f3460 100%);
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
   }
 
-  .flip-card-half span {
+  /* Number styling */
+  .digit-half span,
+  .flip-half span {
     position: absolute;
     width: 100%;
     left: 0;
@@ -188,14 +224,19 @@
     color: #00d4ff;
     text-align: center;
     text-shadow: 0 2px 8px rgba(0, 212, 255, 0.5);
+    line-height: 1;
   }
 
-  .flip-card-top span {
-    top: 2px;
+  /* Top half numbers - show top portion */
+  .digit-top-static span,
+  .flip-half span.top-half {
+    top: 6px;
   }
 
-  .flip-card-bottom span {
-    top: -29px;
+  /* Bottom half numbers - show bottom portion */
+  .digit-bottom-static span,
+  .flip-half span.bottom-half {
+    top: -26px;
   }
 
   .flip-label {
@@ -213,16 +254,19 @@
       height: 48px;
     }
 
-    .flip-card-half span {
+    .digit-half span,
+    .flip-half span {
       font-size: 28px;
     }
 
-    .flip-card-top span {
-      top: 6px;
+    .digit-top-static span,
+    .flip-half span.top-half {
+      top: 8px;
     }
 
-    .flip-card-bottom span {
-      top: -16px;
+    .digit-bottom-static span,
+    .flip-half span.bottom-half {
+      top: -14px;
     }
 
     .flip-label {

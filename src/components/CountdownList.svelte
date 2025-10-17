@@ -3,6 +3,7 @@
   import CountdownItem from './CountdownItem.svelte';
   import type { CountdownItem as CountdownItemType, ConfirmDialogConfig } from '../lib/types';
   import type { TimeRemaining } from '../lib/types';
+  import { Plus } from 'lucide-svelte';
 
   export let countdowns: CountdownItemType[] = [];
   export let timeRemainingMap: Map<string, TimeRemaining>;
@@ -26,7 +27,7 @@
   <div class="list-header">
     <h1>My Countdowns</h1>
     <button class="btn-add" on:click={onAdd} title="Add New Countdown">
-      +
+      <Plus size={28} strokeWidth={2.5} />
     </button>
   </div>
 
@@ -86,17 +87,18 @@
     justify-content: center;
     width: 56px;
     height: 56px;
+    min-width: 56px;
+    min-height: 56px;
     padding: 0;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none;
     border-radius: 50%;
-    font-size: 32px;
-    font-weight: 300;
     line-height: 1;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    flex-shrink: 0;
   }
 
   .btn-add:hover {
@@ -166,7 +168,8 @@
     .btn-add {
       width: 48px;
       height: 48px;
-      font-size: 28px;
+      min-width: 48px;
+      min-height: 48px;
     }
 
     .empty-state {
