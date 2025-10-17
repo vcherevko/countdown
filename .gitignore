@@ -17,3 +17,5 @@ dist/
 build/
 coverage/
 .cache/
+ignore/
+IMPLEMENTATION_PLAN.md
