@@ -7,6 +7,7 @@ A modern web application for creating and managing multiple countdown timers to 
 - **Svelte 5** - Modern reactive UI framework
 - **TypeScript** - Type-safe development
 - **Vite** - Fast build tool and dev server
+- **Lucide Svelte** - Beautiful SVG icon library
 - **Docker** - Containerized deployment
 - **Nginx** - Production web server
 
@@ -153,11 +154,11 @@ countdown-svelte/
 ## How It Works
 
 1. **List View** - See all your countdowns at a glance, sorted by urgency
-2. **Add Countdown** - Click "+ Add New" or "Create Countdown" button
+2. **Add Countdown** - Click the Plus icon button to create a new countdown
 3. **Fill Form** - Enter a title, date of birth, target age, and display format
 4. **Live Updates** - Watch all countdowns update in real-time every second
-5. **Edit** - Click the edit icon (✏️) to modify any countdown
-6. **Delete** - Click the delete icon (🗑️) and confirm to remove a countdown
+5. **Edit** - Click the Pencil icon to modify any countdown
+6. **Delete** - Click the Trash icon and confirm to remove a countdown
 7. **Persistence** - All data is automatically saved to localStorage
 
 ## Technical Details
@@ -170,7 +171,8 @@ countdown-svelte/
 
 ### Key Features
 - **Reactive Updates**: All countdowns update simultaneously every second using setInterval
-- **Flip Animation**: CSS 3D transforms with animationend event synchronization for smooth transitions
+- **Authentic Flip Animation**: Vintage flip clock mechanics where only the top half flips downward using CSS 3D transforms (rotateX), gravity-driven cubic-bezier easing, and three-layer z-index management for realistic mechanical feel
+- **SVG Icons**: Professional Lucide icons (Pencil, Trash2, Plus) that scale perfectly on all devices
 - **Timestamp-based**: Dates stored as millisecond timestamps for reliability
 - **UUID Generation**: Unique IDs using timestamp + random string
 - **Derived Stores**: Automatic sorting by time remaining (closest deadline first)
