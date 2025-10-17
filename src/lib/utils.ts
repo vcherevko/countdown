@@ -25,28 +25,28 @@ export function formatTimeDisplay(
   switch (format) {
     case 'days':
       return [
-        { value: days, label: days === 1 ? 'Day' : 'Days', show: true },
-        { value: hours, label: hours === 1 ? 'Hour' : 'Hours', show: true },
-        { value: minutes, label: minutes === 1 ? 'Minute' : 'Minutes', show: true },
-        { value: seconds, label: seconds === 1 ? 'Second' : 'Seconds', show: true }
+        { value: days, label: 'Days', show: true },
+        { value: hours, label: 'Hours', show: true },
+        { value: minutes, label: 'Minutes', show: true },
+        { value: seconds, label: 'Seconds', show: true }
       ].filter(unit => unit.show);
     case 'hours':
       const totalHours = days * 24 + hours;
       return [
-        { value: totalHours, label: totalHours === 1 ? 'Hour' : 'Hours', show: true },
-        { value: minutes, label: minutes === 1 ? 'Minute' : 'Minutes', show: true },
-        { value: seconds, label: seconds === 1 ? 'Second' : 'Seconds', show: true }
+        { value: totalHours, label: 'Hours', show: true },
+        { value: minutes, label: 'Minutes', show: true },
+        { value: seconds, label: 'Seconds', show: true }
       ];
     case 'minutes':
       const totalMinutes = days * 24 * 60 + hours * 60 + minutes;
       return [
-        { value: totalMinutes, label: totalMinutes === 1 ? 'Minute' : 'Minutes', show: true },
-        { value: seconds, label: seconds === 1 ? 'Second' : 'Seconds', show: true }
+        { value: totalMinutes, label: 'Minutes', show: true },
+        { value: seconds, label: 'Seconds', show: true }
       ];
     case 'seconds':
       const totalSeconds = days * 24 * 60 * 60 + hours * 60 * 60 + minutes * 60 + seconds;
       return [
-        { value: totalSeconds, label: totalSeconds === 1 ? 'Second' : 'Seconds', show: true }
+        { value: totalSeconds, label: 'Seconds', show: true }
       ];
   }
 }

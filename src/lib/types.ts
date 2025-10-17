@@ -31,3 +31,24 @@ export interface TimeUnit {
   label: string;
   show: boolean;
 }
+
+export interface CountdownItem {
+  id: string;
+  title: string;
+  dob: string;
+  targetAge: number;
+  targetDate: number;
+  format: DisplayFormat;
+  createdAt: number;
+}
+
+export type AppPage = 'list' | 'edit' | 'add';
+
+export interface ConfirmDialogConfig {
+  title: string;
+  message: string;
+  confirmText?: string;
+  cancelText?: string;
+  onConfirm: () => void;
+  onCancel?: () => void;
+}

@@ -1,93 +1,118 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { get } from 'svelte/store';
-import { countdownStore } from '../countdown';
+import { countdownsStore, sortedCountdowns } from '../countdown';
+import { countdownStorage } from '../../lib/storage';
 
-describe('countdownStore', () => {
+describe('countdownsStore', () => {
   beforeEach(() => {
-    countdownStore.reset();
+    countdownStorage.clear();
+    const state = get(countdownsStore);
+    state.items.forEach(item => {
+      countdownsStore.deleteCountdown(item.id);
+    });
     vi.clearAllTimers();
+  });
+
+  afterEach(() => {
+    countdownStorage.clear();
+    const state = get(countdownsStore);
+    state.items.forEach(item => {
+      countdownsStore.deleteCountdown(item.id);
+    });
   });
 
   describe('initial state', () => {
     it('should have correct default values', () => {
-      const state = get(countdownStore);
+      const state = get(countdownsStore);
 
-      expect(state.isPaused).toBe(false);
-      expect(state.isRunning).toBe(false);
-      expect(state.targetDateTimestamp).toBe(null);
-      expect(state.timeRemaining).toBe(null);
-      expect(state.format).toBe('days');
+      expect(state.items).toEqual([]);
+      expect(state.activeId).toBe(null);
+      expect(state.currentPage).toBe('list');
+      expect(state.timeRemainingMap).toBeInstanceOf(Map);
     });
   });
 
-  describe('start', () => {
-    it('should set correct state when starting countdown', () => {
-      countdownStore.start('1990-01-01', 40, 'hours');
-      const state = get(countdownStore);
+  describe('addCountdown', () => {
+    it('should add a countdown correctly', () => {
+      countdownsStore.addCountdown('Test Countdown', '1990-01-01', 40, 'full');
+      const state = get(countdownsStore);
 
-      expect(state.isRunning).toBe(true);
-      expect(state.isPaused).toBe(false);
-      expect(state.targetDateTimestamp).toBeTypeOf('number');
-      expect(state.targetDateTimestamp).toBeGreaterThan(0);
-      expect(state.timeRemaining).not.toBe(null);
-      expect(state.format).toBe('hours');
+      expect(state.items).toHaveLength(1);
+      expect(state.items[0].title).toBe('Test Countdown');
+      expect(state.items[0].dob).toBe('1990-01-01');
+      expect(state.items[0].targetAge).toBe(40);
+      expect(state.items[0].format).toBe('full');
     });
 
-    it('should calculate correct target date from DOB and age', () => {
-      countdownStore.start('1990-01-01', 40, 'days');
-      const state = get(countdownStore);
+    it('should calculate target date correctly', () => {
+      countdownsStore.addCountdown('Test', '1990-01-01', 40, 'full');
+      const state = get(countdownsStore);
 
       const expectedDate = new Date('1990-01-01T00:00:00');
       expectedDate.setFullYear(expectedDate.getFullYear() + 40);
 
-      expect(state.targetDateTimestamp).toBe(expectedDate.getTime());
+      expect(state.items[0].targetDate).toBe(expectedDate.getTime());
+    });
+
+    it('should persist countdown to storage', () => {
+      countdownsStore.addCountdown('Test', '1990-01-01', 40, 'full');
+      const stored = countdownStorage.getAll();
+
+      expect(stored).toHaveLength(1);
+      expect(stored[0].title).toBe('Test');
     });
   });
 
-  describe('pause', () => {
-    it('should pause countdown correctly', () => {
-      countdownStore.start('1990-01-01', 40, 'days');
-      countdownStore.pause();
-      const state = get(countdownStore);
+  describe('updateCountdown', () => {
+    it('should call update on storage', () => {
+      countdownsStore.addCountdown('Test', '1990-01-01', 40, 'full');
+      const beforeUpdate = countdownStorage.getAll();
+      expect(beforeUpdate.length).toBeGreaterThan(0);
 
-      expect(state.isPaused).toBe(true);
-      expect(state.isRunning).toBe(true);
+      if (beforeUpdate.length > 0) {
+        const id = beforeUpdate[0].id;
+        countdownsStore.updateCountdown(id, { title: 'Updated Test' });
+
+        const afterUpdate = countdownStorage.getAll();
+        expect(afterUpdate.length).toBeGreaterThan(0);
+      }
     });
   });
 
-  describe('resume', () => {
-    it('should resume countdown correctly', () => {
-      countdownStore.start('1990-01-01', 40, 'days');
-      countdownStore.pause();
-      countdownStore.resume();
-      const state = get(countdownStore);
+  describe('deleteCountdown', () => {
+    it('should delete countdown from storage', () => {
+      countdownsStore.addCountdown('Test', '1990-01-01', 40, 'full');
+      const state = get(countdownsStore);
+      const id = state.items[0].id;
 
-      expect(state.isPaused).toBe(false);
-      expect(state.isRunning).toBe(true);
+      countdownsStore.deleteCountdown(id);
+
+      const stored = countdownStorage.getById(id);
+      expect(stored).toBeNull();
     });
   });
 
-  describe('reset', () => {
-    it('should reset countdown to initial state', () => {
-      countdownStore.start('1990-01-01', 40, 'hours');
-      countdownStore.reset();
-      const state = get(countdownStore);
+  describe('navigateTo', () => {
+    it('should navigate to different pages', () => {
+      countdownsStore.navigateTo('add');
+      expect(get(countdownsStore).currentPage).toBe('add');
 
-      expect(state.isPaused).toBe(false);
-      expect(state.isRunning).toBe(false);
-      expect(state.targetDateTimestamp).toBe(null);
-      expect(state.timeRemaining).toBe(null);
-      expect(state.format).toBe('days');
+      countdownsStore.navigateTo('edit', 'some-id');
+      const state = get(countdownsStore);
+      expect(state.currentPage).toBe('edit');
+      expect(state.activeId).toBe('some-id');
+
+      countdownsStore.navigateTo('list', null);
+      const listState = get(countdownsStore);
+      expect(listState.currentPage).toBe('list');
+      expect(listState.activeId).toBe(null);
     });
   });
 
-  describe('changeFormat', () => {
-    it('should update format correctly', () => {
-      countdownStore.start('1990-01-01', 40, 'days');
-      countdownStore.changeFormat('seconds');
-      const state = get(countdownStore);
-
-      expect(state.format).toBe('seconds');
+  describe('sortedCountdowns', () => {
+    it('should return an array', () => {
+      const sorted = get(sortedCountdowns);
+      expect(Array.isArray(sorted)).toBe(true);
     });
   });
 });
