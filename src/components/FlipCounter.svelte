@@ -140,7 +140,7 @@
     top: 0;
     left: 0;
     border-radius: 8px 8px 0 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     z-index: 1;
   }
 
@@ -195,7 +195,7 @@
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
     border-radius: 8px 8px 0 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   }
 
   /* Back face of flipping element (new number) */
