@@ -25,7 +25,7 @@
 
 <div class="list-page">
   <div class="list-header">
-    <h1>My Countdowns</h1>
+    <h1>Countdowns</h1>
     <button class="btn-add" on:click={onAdd} title="Add New Countdown">
       <Plus size={28} strokeWidth={2.5} />
     </button>
