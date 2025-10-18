@@ -130,8 +130,8 @@
     width: 100%;
     height: 50%;
     overflow: hidden;
-    background: linear-gradient(180deg, #0f3460 0%, #1a4d7a 100%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--tg-theme-button-color, #667eea);
+    border: 1px solid rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
   }
 
@@ -140,7 +140,7 @@
     top: 0;
     left: 0;
     border-radius: 8px 8px 0 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
     z-index: 1;
   }
 
@@ -149,8 +149,8 @@
     bottom: 0;
     left: 0;
     border-radius: 0 0 8px 8px;
-    background: linear-gradient(180deg, #0a2540 0%, #0f3460 100%);
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+    background: var(--tg-theme-button-color, #667eea);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
     z-index: 1;
   }
 
@@ -209,8 +209,8 @@
     -webkit-backface-visibility: hidden;
     transform: rotateX(180deg);
     border-radius: 0 0 8px 8px;
-    background: linear-gradient(180deg, #0a2540 0%, #0f3460 100%);
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+    background: var(--tg-theme-button-color, #667eea);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
   }
 
   /* Number styling */
@@ -221,9 +221,9 @@
     left: 0;
     font-size: 40px;
     font-weight: 700;
-    color: #00d4ff;
+    color: var(--tg-theme-button-text-color, #ffffff);
     text-align: center;
-    text-shadow: 0 2px 8px rgba(0, 212, 255, 0.5);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     line-height: 1;
   }
 
@@ -242,7 +242,7 @@
   .flip-label {
     font-size: 11px;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--tg-theme-hint-color, #666);
     text-transform: uppercase;
     letter-spacing: 1px;
     text-align: center;

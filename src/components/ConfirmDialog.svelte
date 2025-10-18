@@ -70,7 +70,10 @@
   }
 
   .dialog {
-    background: white;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 12px;
     padding: 24px;
     max-width: 400px;
@@ -78,15 +81,22 @@
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
   }
 
+  @media (prefers-color-scheme: dark) {
+    .dialog {
+      background: rgba(30, 30, 30, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  }
+
   h3 {
     margin: 0 0 12px 0;
     font-size: 20px;
-    color: #333;
+    color: var(--tg-theme-text-color, #333);
   }
 
   p {
     margin: 0 0 24px 0;
-    color: #666;
+    color: var(--tg-theme-hint-color, #666);
     line-height: 1.5;
   }
 
@@ -107,12 +117,12 @@
   }
 
   .btn-cancel {
-    background: #e0e0e0;
-    color: #333;
+    background: var(--tg-theme-bg-color, #e0e0e0);
+    color: var(--tg-theme-text-color, #333);
   }
 
   .btn-cancel:hover {
-    background: #d0d0d0;
+    opacity: 0.8;
   }
 
   .btn-confirm {
@@ -121,6 +131,6 @@
   }
 
   .btn-confirm:hover {
-    background: #c0392b;
+    opacity: 0.9;
   }
 </style>

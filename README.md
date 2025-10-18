@@ -26,6 +26,10 @@ A modern web application for creating and managing multiple countdown timers to 
 - **Input Validation** - Smart form validation with helpful error messages
 - **Responsive Design** - Mobile-first design that works on all screen sizes
 - **Telegram Mini App** - Fully integrated with Telegram Web App API
+- **Telegram Theme Integration** - Automatically adapts to Telegram's light/dark theme
+- **Animated Particle Background** - Beautiful twinkling stars that adapt to theme
+- **Glass Morphism UI** - Modern frosted glass effect with backdrop blur
+- **Theme Detection** - Automatically detects and responds to theme changes
 
 ## Getting Started
 
@@ -130,7 +134,8 @@ countdown-svelte/
 │   │   ├── CountdownEditPage.svelte # Add/edit countdown form
 │   │   ├── CountdownItem.svelte     # Individual countdown card
 │   │   ├── CountdownList.svelte     # Main list view with empty state
-│   │   └── FlipCounter.svelte       # Animated flip counter display
+│   │   ├── FlipCounter.svelte       # Animated flip counter display
+│   │   └── ParticleBackground.svelte # Animated particle background
 │   ├── lib/
 │   │   ├── storage/            # Storage abstraction layer
 │   │   │   ├── ICountdownStorage.ts      # Storage interface
@@ -172,6 +177,10 @@ countdown-svelte/
 ### Key Features
 - **Reactive Updates**: All countdowns update simultaneously every second using setInterval
 - **Authentic Flip Animation**: Vintage flip clock mechanics where only the top half flips downward using CSS 3D transforms (rotateX), gravity-driven cubic-bezier easing, and three-layer z-index management for realistic mechanical feel
+- **Telegram Theme Integration**: Full support for Telegram Mini App theme variables (`--tg-theme-*`) with automatic light/dark mode adaptation
+- **Particle Animation System**: 50 animated particles with randomized positions, sizes, and timing for natural twinkling effect
+- **Glass Morphism Design**: Modern frosted glass UI using `backdrop-filter: blur(10px)` with semi-transparent backgrounds and subtle borders
+- **Smart Theme Detection**: Automatic theme detection via CSS custom properties, color brightness calculation, and MutationObserver for real-time theme changes
 - **SVG Icons**: Professional Lucide icons (Pencil, Trash2, Plus) that scale perfectly on all devices
 - **Timestamp-based**: Dates stored as millisecond timestamps for reliability
 - **UUID Generation**: Unique IDs using timestamp + random string
@@ -179,6 +188,7 @@ countdown-svelte/
 - **Form Validation**: Real-time validation with user-friendly error messages
 - **Scoped Styles**: Component-scoped CSS prevents style conflicts
 - **Component Testing**: Comprehensive test coverage with Vitest
+- **Accessibility**: Respects `prefers-reduced-motion` for particle animations
 
 ### Data Flow
 1. User actions trigger store methods (add/update/delete)

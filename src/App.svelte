@@ -3,6 +3,7 @@
   import CountdownList from './components/CountdownList.svelte';
   import CountdownEditPage from './components/CountdownEditPage.svelte';
   import ConfirmDialog from './components/ConfirmDialog.svelte';
+  import ParticleBackground from './components/ParticleBackground.svelte';
   import { countdownsStore, sortedCountdowns } from './stores/countdown';
   import type { ConfirmDialogConfig, DisplayFormat } from './lib/types';
 
@@ -46,6 +47,8 @@
     ? $countdownsStore.items.find((item) => item.id === $countdownsStore.activeId) || null
     : null;
 </script>
+
+<ParticleBackground />
 
 <main>
   <div class="countdown-app">
@@ -91,12 +94,14 @@
 
   :global(body) {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: var(--tg-theme-bg-color, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+    background: var(--tg-theme-bg-color, #f5f5f5);
+    color: var(--tg-theme-text-color, #333);
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 10px;
+    margin: 0;
   }
 
   main {
@@ -104,11 +109,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+    z-index: 1;
   }
 
   .countdown-app {
     width: 100%;
     max-width: 100%;
+    position: relative;
   }
 
   @media (max-width: 600px) {

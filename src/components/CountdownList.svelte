@@ -66,19 +66,27 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 32px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     padding: 20px 24px;
     border-radius: 16px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .list-header {
+      background: rgba(30, 30, 30, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
   }
 
   h1 {
     margin: 0;
     font-size: 32px;
     font-weight: 700;
-    color: #ffffff;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    color: var(--tg-theme-text-color, #333);
   }
 
   .btn-add {
@@ -90,20 +98,20 @@
     min-width: 56px;
     min-height: 56px;
     padding: 0;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: var(--tg-theme-button-color, #667eea);
+    color: var(--tg-theme-button-text-color, #ffffff);
     border: none;
     border-radius: 50%;
     line-height: 1;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     flex-shrink: 0;
   }
 
   .btn-add:hover {
     transform: scale(1.1) rotate(90deg);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
   }
 
   .btn-add:active {
@@ -117,31 +125,37 @@
     justify-content: center;
     padding: 80px 20px;
     text-align: center;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border-radius: 16px;
-    border: 2px dashed rgba(255, 255, 255, 0.2);
+    border: 2px dashed rgba(0, 0, 0, 0.2);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .empty-state {
+      background: rgba(30, 30, 30, 0.7);
+      border: 2px dashed rgba(255, 255, 255, 0.2);
+    }
   }
 
   .empty-icon {
     font-size: 96px;
     margin-bottom: 24px;
     opacity: 0.6;
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
   }
 
   .empty-state h3 {
     margin: 0 0 12px 0;
     font-size: 28px;
     font-weight: 700;
-    color: #ffffff;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    color: var(--tg-theme-text-color, #333);
   }
 
   .empty-state p {
     margin: 0;
     font-size: 16px;
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--tg-theme-hint-color, #666);
     max-width: 400px;
     line-height: 1.6;
   }

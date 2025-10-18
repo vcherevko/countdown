@@ -152,16 +152,25 @@
     margin: 0 0 24px 0;
     font-size: 32px;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--tg-theme-text-color, #333);
     text-align: center;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
 
   form {
-    background: white;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 12px;
     padding: 24px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    form {
+      background: rgba(30, 30, 30, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
   }
 
   .form-group {
@@ -174,13 +183,13 @@
     align-items: center;
     margin-bottom: 8px;
     font-weight: 600;
-    color: #333;
+    color: var(--tg-theme-text-color, #333);
     font-size: 14px;
   }
 
   .char-count {
     font-size: 12px;
-    color: #999;
+    color: var(--tg-theme-hint-color, #999);
     font-weight: 400;
   }
 
@@ -188,16 +197,18 @@
   select {
     width: 100%;
     padding: 12px;
-    border: 2px solid #e0e0e0;
+    border: 2px solid var(--tg-theme-hint-color, rgba(0, 0, 0, 0.15));
     border-radius: 8px;
     font-size: 16px;
+    background: var(--tg-theme-bg-color, #ffffff);
+    color: var(--tg-theme-text-color, #333);
     transition: border-color 0.2s ease;
   }
 
   input:focus,
   select:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: var(--tg-theme-link-color, #667eea);
   }
 
   input.error {
@@ -227,32 +238,31 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
-    background: #667eea;
-    color: white;
+    background: var(--tg-theme-button-color, #667eea);
+    color: var(--tg-theme-button-text-color, #ffffff);
   }
 
   button[type="submit"]:hover,
   .btn-save:hover {
-    background: #5568d3;
+    opacity: 0.9;
     transform: translateY(-1px);
   }
 
   .btn-cancel {
     flex: 1;
     padding: 12px 24px;
-    border: 2px solid #e0e0e0;
+    border: 2px solid var(--tg-theme-hint-color, rgba(0, 0, 0, 0.15));
     border-radius: 8px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
-    background: white;
-    color: #666;
+    background: var(--tg-theme-secondary-bg-color, #ffffff);
+    color: var(--tg-theme-text-color, #666);
   }
 
   .btn-cancel:hover {
-    border-color: #ccc;
-    background: #f5f5f5;
+    background: var(--tg-theme-bg-color, #f5f5f5);
   }
 
   @media (max-width: 600px) {

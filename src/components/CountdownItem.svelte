@@ -58,17 +58,34 @@
 
 <style>
   .countdown-card {
-    background: white;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     padding: 20px;
     transition: all 0.3s ease;
     cursor: pointer;
   }
 
+  @media (prefers-color-scheme: dark) {
+    .countdown-card {
+      background: rgba(30, 30, 30, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  }
+
   .countdown-card:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
     transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .countdown-card:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+    }
   }
 
   .card-header {
@@ -81,7 +98,7 @@
   h3 {
     margin: 0;
     font-size: 20px;
-    color: #333;
+    color: var(--tg-theme-text-color, #333);
     flex: 1;
   }
 
@@ -100,15 +117,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #666;
+    color: var(--tg-theme-hint-color, #666);
   }
 
   .btn-icon:hover {
-    background: #f0f0f0;
+    background: var(--tg-theme-bg-color, #f0f0f0);
   }
 
   .btn-edit:hover {
-    color: #667eea;
+    color: var(--tg-theme-link-color, #667eea);
   }
 
   .btn-delete:hover {
@@ -123,7 +140,7 @@
   }
 
   .target-date {
-    color: #666;
+    color: var(--tg-theme-hint-color, #666);
     font-size: 14px;
   }
 
@@ -133,13 +150,13 @@
     flex-wrap: wrap;
     justify-content: center;
     padding: 16px;
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    background: var(--tg-theme-bg-color, #f5f5f5);
     border-radius: 12px;
-    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 
   .time-display.loading {
-    color: #999;
+    color: var(--tg-theme-hint-color, #999);
     font-style: italic;
   }
 
