@@ -1,16 +1,21 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
   import CountdownItem from './CountdownItem.svelte';
+  import Menu from './Menu.svelte';
   import type { CountdownItem as CountdownItemType, ConfirmDialogConfig } from '../lib/types';
   import type { TimeRemaining } from '../lib/types';
-  import { Plus } from 'lucide-svelte';
+  import { Plus, Menu as MenuIcon } from 'lucide-svelte';
 
   export let countdowns: CountdownItemType[] = [];
   export let timeRemainingMap: Map<string, TimeRemaining>;
   export let onAdd: () => void;
   export let onEdit: (id: string) => void;
   export let onDelete: (id: string) => void;
+  export let onSettings: () => void;
+  export let onAbout: () => void;
   export let showConfirmDialog: (config: ConfirmDialogConfig) => void;
+
+  let isMenuOpen = false;
 
   function handleDelete(countdown: CountdownItemType) {
     showConfirmDialog({
@@ -21,12 +26,32 @@
       onConfirm: () => onDelete(countdown.id),
     });
   }
+
+  function toggleMenu() {
+    isMenuOpen = !isMenuOpen;
+  }
+
+  function closeMenu() {
+    isMenuOpen = false;
+  }
 </script>
 
 <div class="list-page">
   <div class="list-header">
-    <h1>Countdowns</h1>
-    <button class="btn-add" on:click={onAdd} title="Add New Countdown">
+    <div class="menu-container">
+      <button
+        class="btn-menu"
+        class:menu-active={isMenuOpen}
+        on:click={toggleMenu}
+        title="Menu"
+        aria-expanded={isMenuOpen}
+        aria-label="Menu"
+      >
+        <MenuIcon size={28} strokeWidth={2.5} />
+      </button>
+      <Menu isOpen={isMenuOpen} {onSettings} {onAbout} onClose={closeMenu} />
+    </div>
+    <button class="btn-add" on:click={onAdd} title="Add New Countdown" aria-label="Add New Countdown">
       <Plus size={28} strokeWidth={2.5} />
     </button>
   </div>
@@ -55,6 +80,7 @@
 
 <style>
   .list-page {
+    width: 100%;
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
@@ -62,6 +88,7 @@
   }
 
   .list-header {
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -73,6 +100,7 @@
     padding: 20px 24px;
     border-radius: 16px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    z-index: 10;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -82,11 +110,51 @@
     }
   }
 
-  h1 {
-    margin: 0;
-    font-size: 32px;
-    font-weight: 700;
+  .menu-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .btn-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
+    min-height: 56px;
+    padding: 0;
+    background: transparent;
     color: var(--tg-theme-text-color, #333);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .btn-menu:hover {
+    background: rgba(0, 0, 0, 0.06);
+  }
+
+  .btn-menu:active {
+    transform: scale(0.95);
+  }
+
+  .btn-menu.menu-active {
+    background: rgba(0, 0, 0, 0.08);
+    color: var(--tg-theme-button-color, #667eea);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .btn-menu:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .btn-menu.menu-active {
+      background: rgba(255, 255, 255, 0.15);
+      color: var(--tg-theme-button-color, #8b9aff);
+    }
   }
 
   .btn-add {
@@ -171,12 +239,15 @@
       padding: 16px;
     }
 
-    h1 {
-      font-size: 24px;
-    }
-
     .list-header {
       padding: 16px 20px;
+    }
+
+    .btn-menu {
+      width: 48px;
+      height: 48px;
+      min-width: 48px;
+      min-height: 48px;
     }
 
     .btn-add {
