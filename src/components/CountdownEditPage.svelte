@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { fade } from 'svelte/transition';
+  import { ArrowLeft } from 'lucide-svelte';
   import type { CountdownItem, DisplayFormat } from '../lib/types';
 
   export let countdown: CountdownItem | null = null;
@@ -66,10 +68,16 @@
   }
 </script>
 
-<div class="edit-page">
-  <h2>{countdown ? 'Edit Countdown' : 'New Countdown'}</h2>
+<div class="edit-page" in:fade={{ duration: 300 }}>
+  <div class="edit-header">
+    <button class="btn-back" on:click={onCancel} title="Go Back">
+      <ArrowLeft size={24} />
+    </button>
+    <h1>{countdown ? 'Edit' : 'Create'}</h1>
+  </div>
 
-  <form on:submit|preventDefault={handleSubmit}>
+  <div class="edit-content">
+    <form on:submit|preventDefault={handleSubmit}>
     <div class="form-group">
       <label for="title">
         Title
@@ -130,47 +138,95 @@
       </select>
     </div>
 
-    <div class="form-actions">
-      <button type="button" class="btn-cancel" on:click={onCancel}>
-        Cancel
-      </button>
-      <button type="submit" class="btn-save">
-        {countdown ? 'Save Changes' : 'Create Countdown'}
-      </button>
-    </div>
+    <button type="submit" class="btn-save">
+      {countdown ? 'Save Changes' : 'Create'}
+    </button>
   </form>
+  </div>
 </div>
 
 <style>
   .edit-page {
-    max-width: 600px;
+    width: 100%;
+    max-width: 800px;
     margin: 0 auto;
     padding: 20px;
+    min-height: 100vh;
   }
 
-  h2 {
-    margin: 0 0 24px 0;
-    font-size: 32px;
-    font-weight: 700;
-    color: var(--tg-theme-text-color, #333);
-    text-align: center;
-  }
-
-  form {
+  .edit-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 12px;
-    padding: 24px;
+    padding: 20px 24px;
+    border-radius: 16px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   }
 
   @media (prefers-color-scheme: dark) {
-    form {
+    .edit-header {
       background: rgba(30, 30, 30, 0.7);
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
+  }
+
+  .btn-back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    background: transparent;
+    color: var(--tg-theme-text-color, #333);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .btn-back:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .btn-back:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--tg-theme-text-color, #333);
+  }
+
+  .edit-content {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .edit-content {
+      background: rgba(30, 30, 30, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
   }
 
   .form-group {
@@ -222,16 +278,11 @@
     color: #e74c3c;
   }
 
-  .form-actions {
-    display: flex;
-    gap: 12px;
-    margin-top: 24px;
-  }
-
   button[type="submit"],
   .btn-save {
-    flex: 1;
-    padding: 12px 24px;
+    width: 100%;
+    padding: 14px 24px;
+    margin-top: 24px;
     border: none;
     border-radius: 8px;
     font-size: 16px;
@@ -248,21 +299,9 @@
     transform: translateY(-1px);
   }
 
-  .btn-cancel {
-    flex: 1;
-    padding: 12px 24px;
-    border: 2px solid var(--tg-theme-hint-color, rgba(0, 0, 0, 0.15));
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    background: var(--tg-theme-secondary-bg-color, #ffffff);
-    color: var(--tg-theme-text-color, #666);
-  }
-
-  .btn-cancel:hover {
-    background: var(--tg-theme-bg-color, #f5f5f5);
+  button[type="submit"]:active,
+  .btn-save:active {
+    transform: scale(0.98);
   }
 
   @media (max-width: 600px) {
@@ -270,16 +309,16 @@
       padding: 16px;
     }
 
-    form {
-      padding: 20px;
-    }
-
-    h2 {
+    h1 {
       font-size: 24px;
     }
 
-    .form-actions {
-      flex-direction: column;
+    .edit-header {
+      padding: 16px 20px;
+    }
+
+    .edit-content {
+      padding: 24px;
     }
   }
 </style>

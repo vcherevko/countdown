@@ -54,8 +54,7 @@
         height: {particle.size}px;
         animation-duration: {particle.duration}s;
         animation-delay: {particle.delay}s;
-      "
-    />
+      "></div>
   {/each}
 </div>
 

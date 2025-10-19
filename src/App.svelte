@@ -2,6 +2,8 @@
   import { fade } from 'svelte/transition';
   import CountdownList from './components/CountdownList.svelte';
   import CountdownEditPage from './components/CountdownEditPage.svelte';
+  import SettingsPage from './components/SettingsPage.svelte';
+  import AboutPage from './components/AboutPage.svelte';
   import ConfirmDialog from './components/ConfirmDialog.svelte';
   import ParticleBackground from './components/ParticleBackground.svelte';
   import { countdownsStore, sortedCountdowns } from './stores/countdown';
@@ -25,6 +27,14 @@
     countdownsStore.deleteCountdown(id);
   }
 
+  function handleSettings() {
+    countdownsStore.navigateTo('settings', null);
+  }
+
+  function handleAbout() {
+    countdownsStore.navigateTo('about', null);
+  }
+
   function handleSave(title: string, dob: string, targetAge: number, format: DisplayFormat) {
     if ($countdownsStore.currentPage === 'add') {
       countdownsStore.addCountdown(title, dob, targetAge, format);
@@ -40,6 +50,10 @@
   }
 
   function handleCancel() {
+    countdownsStore.navigateTo('list', null);
+  }
+
+  function handleBack() {
     countdownsStore.navigateTo('list', null);
   }
 
@@ -60,6 +74,8 @@
           onAdd={handleAdd}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          onSettings={handleSettings}
+          onAbout={handleAbout}
           {showConfirmDialog}
         />
       </div>
@@ -79,6 +95,14 @@
           onCancel={handleCancel}
         />
       </div>
+    {:else if $countdownsStore.currentPage === 'settings'}
+      <div in:fade={{ duration: 200 }}>
+        <SettingsPage onBack={handleBack} />
+      </div>
+    {:else if $countdownsStore.currentPage === 'about'}
+      <div in:fade={{ duration: 200 }}>
+        <AboutPage onBack={handleBack} />
+      </div>
     {/if}
   </div>
 
@@ -97,25 +121,21 @@
     background: var(--tg-theme-bg-color, #f5f5f5);
     color: var(--tg-theme-text-color, #333);
     min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
     margin: 0;
   }
 
   main {
     width: 100%;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
     position: relative;
     z-index: 1;
   }
 
   .countdown-app {
     width: 100%;
-    max-width: 100%;
+    max-width: 840px;
     position: relative;
   }
 

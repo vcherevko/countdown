@@ -25,6 +25,10 @@ A modern web application for creating and managing multiple countdown timers to 
 - **Sorting** - Automatically sorted by time remaining (closest deadline first)
 - **Input Validation** - Smart form validation with helpful error messages
 - **Responsive Design** - Mobile-first design that works on all screen sizes
+- **Navigation Menu** - Hamburger menu with Settings and About pages
+- **Settings Page** - Placeholder for future configuration options
+- **About Page** - Displays app version and git commit hash for easy debugging
+- **CalVer Versioning** - Automatic date-based versioning (YYYY.MM.DD-githash) injected at build time
 - **Telegram Mini App** - Fully integrated with Telegram Web App API
 - **Telegram Theme Integration** - Automatically adapts to Telegram's light/dark theme
 - **Animated Particle Background** - Beautiful twinkling stars that adapt to theme
@@ -129,12 +133,18 @@ countdown-svelte/
 ├── src/
 │   ├── components/              # Svelte components
 │   │   ├── __tests__/               # Component tests
-│   │   │   └── FlipCounter.test.ts      # FlipCounter component tests
+│   │   │   ├── FlipCounter.test.ts      # FlipCounter component tests
+│   │   │   ├── Menu.test.ts             # Menu component tests
+│   │   │   ├── SettingsPage.test.ts     # Settings page tests
+│   │   │   └── AboutPage.test.ts        # About page tests
 │   │   ├── ConfirmDialog.svelte    # Reusable confirmation modal
 │   │   ├── CountdownEditPage.svelte # Add/edit countdown form
 │   │   ├── CountdownItem.svelte     # Individual countdown card
-│   │   ├── CountdownList.svelte     # Main list view with empty state
+│   │   ├── CountdownList.svelte     # Main list view with hamburger menu
 │   │   ├── FlipCounter.svelte       # Animated flip counter display
+│   │   ├── Menu.svelte              # Dropdown navigation menu
+│   │   ├── SettingsPage.svelte      # Settings page (placeholder)
+│   │   ├── AboutPage.svelte         # About page with version info
 │   │   └── ParticleBackground.svelte # Animated particle background
 │   ├── lib/
 │   │   ├── storage/            # Storage abstraction layer
@@ -142,7 +152,8 @@ countdown-svelte/
 │   │   │   ├── LocalCountdownStorage.ts  # localStorage implementation
 │   │   │   └── index.ts                  # Storage factory
 │   │   ├── __tests__/               # Unit tests
-│   │   │   └── utils.test.ts            # Utility function tests
+│   │   │   ├── utils.test.ts            # Utility function tests
+│   │   │   └── setup.ts                 # Test setup (animate mock)
 │   │   ├── types.ts           # TypeScript interfaces
 │   │   └── utils.ts           # Utility functions
 │   ├── stores/
@@ -150,7 +161,10 @@ countdown-svelte/
 │   │   │   └── countdown.test.ts        # Countdown store tests
 │   │   └── countdown.ts       # Svelte store for state management
 │   ├── App.svelte             # Root component with routing
-│   └── main.ts                # Application entry point
+│   ├── main.ts                # Application entry point
+│   └── vite-env.d.ts          # Global type definitions
+├── vite.config.ts             # Vite config with version injection
+├── vitest.config.ts           # Vitest config with test setup
 ├── Dockerfile                 # Multi-stage Docker build
 ├── docker-compose.yml         # Docker Compose configuration
 └── package.json
@@ -159,12 +173,14 @@ countdown-svelte/
 ## How It Works
 
 1. **List View** - See all your countdowns at a glance, sorted by urgency
-2. **Add Countdown** - Click the Plus icon button to create a new countdown
-3. **Fill Form** - Enter a title, date of birth, target age, and display format
-4. **Live Updates** - Watch all countdowns update in real-time every second
-5. **Edit** - Click the Pencil icon to modify any countdown
-6. **Delete** - Click the Trash icon and confirm to remove a countdown
-7. **Persistence** - All data is automatically saved to localStorage
+2. **Navigation** - Click the hamburger menu (top left) to access Settings and About pages
+3. **Add Countdown** - Click the Plus icon button (top right) to create a new countdown
+4. **Fill Form** - Enter a title, date of birth, target age, and display format
+5. **Live Updates** - Watch all countdowns update in real-time every second
+6. **Edit** - Click the Pencil icon to modify any countdown
+7. **Delete** - Click the Trash icon and confirm to remove a countdown
+8. **About** - View app version and git commit hash for troubleshooting
+9. **Persistence** - All data is automatically saved to localStorage
 
 ## Technical Details
 
@@ -177,17 +193,19 @@ countdown-svelte/
 ### Key Features
 - **Reactive Updates**: All countdowns update simultaneously every second using setInterval
 - **Authentic Flip Animation**: Vintage flip clock mechanics where only the top half flips downward using CSS 3D transforms (rotateX), gravity-driven cubic-bezier easing, and three-layer z-index management for realistic mechanical feel
+- **CalVer Build Versioning**: Automatic Calendar Versioning (YYYY.MM.DD-githash) using Vite's define feature - version is generated at build time based on current date and git commit, providing instant deployment traceability
+- **Dropdown Menu Navigation**: Slide-down menu with click-outside detection for intuitive navigation to Settings and About pages
 - **Telegram Theme Integration**: Full support for Telegram Mini App theme variables (`--tg-theme-*`) with automatic light/dark mode adaptation
 - **Particle Animation System**: 50 animated particles with randomized positions, sizes, and timing for natural twinkling effect
 - **Glass Morphism Design**: Modern frosted glass UI using `backdrop-filter: blur(10px)` with semi-transparent backgrounds and subtle borders
 - **Smart Theme Detection**: Automatic theme detection via CSS custom properties, color brightness calculation, and MutationObserver for real-time theme changes
-- **SVG Icons**: Professional Lucide icons (Pencil, Trash2, Plus) that scale perfectly on all devices
+- **SVG Icons**: Professional Lucide icons (Menu, Settings, Info, Pencil, Trash2, Plus, ArrowLeft) that scale perfectly on all devices
 - **Timestamp-based**: Dates stored as millisecond timestamps for reliability
 - **UUID Generation**: Unique IDs using timestamp + random string
 - **Derived Stores**: Automatic sorting by time remaining (closest deadline first)
 - **Form Validation**: Real-time validation with user-friendly error messages
 - **Scoped Styles**: Component-scoped CSS prevents style conflicts
-- **Component Testing**: Comprehensive test coverage with Vitest
+- **Component Testing**: Comprehensive test coverage with Vitest including element.animate mocking for jsdom
 - **Accessibility**: Respects `prefers-reduced-motion` for particle animations
 
 ### Data Flow

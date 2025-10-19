@@ -42,7 +42,7 @@ export interface CountdownItem {
   createdAt: number;
 }
 
-export type AppPage = 'list' | 'edit' | 'add';
+export type AppPage = 'list' | 'edit' | 'add' | 'settings' | 'about';
 
 export interface ConfirmDialogConfig {
   title: string;
